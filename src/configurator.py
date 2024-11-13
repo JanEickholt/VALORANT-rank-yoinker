@@ -29,7 +29,7 @@ def configure():
         "Full Advance Config (I know what i am doing!)",
         Separator(),
         "Save and Exit Configurator",
-        "Exit Configurator"
+        "Exit Configurator",
     ]
 
     changed_config = {}
@@ -61,7 +61,7 @@ def configure():
             ).execute()
             break
 
-        os.system('cls')
+        os.system("cls")
 
     if proceed:
         config = default_config | user_config | changed_config

@@ -10,7 +10,7 @@ class Rank:
         if puuid in self.requestMap:
             return self.requestMap[puuid]
 
-        response = self.api.fetch('pd', f"/mmr/v1/players/{puuid}", "get")
+        response = self.api.fetch("pd", f"/mmr/v1/players/{puuid}", "get")
         self.requestMap[puuid] = response
         return response
 
@@ -35,15 +35,23 @@ class Rank:
         try:
             if response.ok:
                 r = response.json()
-                rank_tier = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id]["CompetitiveTier"]
+                rank_tier = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][
+                    season_id
+                ]["CompetitiveTier"]
                 if int(rank_tier) >= 21:
 
                     final["rank"] = rank_tier
-                    final["rr"] = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id]["RankedRating"]
-                    final["leaderboard"] = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id]["LeaderboardRank"]
+                    final["rr"] = r["QueueSkills"]["competitive"][
+                        "SeasonalInfoBySeasonID"
+                    ][season_id]["RankedRating"]
+                    final["leaderboard"] = r["QueueSkills"]["competitive"][
+                        "SeasonalInfoBySeasonID"
+                    ][season_id]["LeaderboardRank"]
                 elif int(rank_tier) not in (0, 1, 2):
                     final["rank"] = rank_tier
-                    final["rr"] = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id]["RankedRating"]
+                    final["rr"] = r["QueueSkills"]["competitive"][
+                        "SeasonalInfoBySeasonID"
+                    ][season_id]["RankedRating"]
                     final["leaderboard"] = 0
 
                 else:
@@ -70,8 +78,15 @@ class Rank:
         seasons = r["QueueSkills"]["competitive"].get("SeasonalInfoBySeasonID")
         if seasons is not None:
             for season in r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"]:
-                if r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season]["WinsByTier"] is not None:
-                    for win_by_tier in r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season]["WinsByTier"]:
+                if (
+                    r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season][
+                        "WinsByTier"
+                    ]
+                    is not None
+                ):
+                    for win_by_tier in r["QueueSkills"]["competitive"][
+                        "SeasonalInfoBySeasonID"
+                    ][season]["WinsByTier"]:
                         if season in self.ranks_before:
                             if int(win_by_tier) > 20:
                                 win_by_tier = int(win_by_tier) + 3
@@ -82,8 +97,12 @@ class Rank:
         else:
             final["peak_rank"] = max_rank
         try:
-            wins = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id]["NumberOfWinsWithPlacements"]
-            total_games = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id]["NumberOfGames"]
+            wins = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][season_id][
+                "NumberOfWinsWithPlacements"
+            ]
+            total_games = r["QueueSkills"]["competitive"]["SeasonalInfoBySeasonID"][
+                season_id
+            ]["NumberOfGames"]
             final["number_of_games"] = total_games
             try:
                 wr = int(wins / total_games * 100)

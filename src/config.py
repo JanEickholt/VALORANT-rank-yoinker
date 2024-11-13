@@ -39,7 +39,7 @@ class Config:
 
                 if len(missing_keys) > 0:
                     self.log("config.json is missing keys")
-                    with open("config.json", 'w') as w:
+                    with open("config.json", "w") as w:
                         self.log(f"missing keys: " + str(missing_keys))
                         for key in missing_keys:
                             config[key] = DEFAULT_CONFIG[key]
@@ -68,17 +68,25 @@ class Config:
 
     @staticmethod
     def weapon_check(name):
-        if name in [weapon["displayName"] for weapon in
-                    requests.get("https://valorant-api.com/v1/weapons").json()["data"]]:
+        if name in [
+            weapon["displayName"]
+            for weapon in requests.get("https://valorant-api.com/v1/weapons").json()[
+                "data"
+            ]
+        ]:
             return True
         else:
             return False
 
     def get_feature_flag(self, key):
-        return self.__dict__.get("flags", DEFAULT_CONFIG["flags"]).get(key, DEFAULT_CONFIG["flags"][key])
+        return self.__dict__.get("flags", DEFAULT_CONFIG["flags"]).get(
+            key, DEFAULT_CONFIG["flags"][key]
+        )
 
     def get_table_flag(self, key):
-        return self.__dict__.get("table", DEFAULT_CONFIG["flags"]).get(key, DEFAULT_CONFIG["table"][key])
+        return self.__dict__.get("table", DEFAULT_CONFIG["flags"]).get(
+            key, DEFAULT_CONFIG["table"][key]
+        )
 
     def config_dialog(self, file_to_write: TextIOWrapper):
         self.log("color config prompt called")

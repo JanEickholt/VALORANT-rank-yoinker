@@ -4,11 +4,11 @@ import json
 
 def save_data(data):
     try:
-        os.mkdir(os.path.join(os.getenv('APPDATA'), "vry"))
+        os.mkdir(os.path.join(os.getenv("APPDATA"), "vry"))
     except FileExistsError:
         pass
     try:
-        with open(os.path.join(os.getenv('APPDATA'), "vry/stats.json")) as f:
+        with open(os.path.join(os.getenv("APPDATA"), "vry/stats.json")) as f:
             original_data = json.load(f)
     except (FileNotFoundError, json.decoder.JSONDecodeError):
         original_data = {}
@@ -20,13 +20,13 @@ def save_data(data):
         else:
             updated_data[puuid].append(data[puuid])
 
-    with open(os.path.join(os.getenv('APPDATA'), "vry/stats.json"), "w") as f:
+    with open(os.path.join(os.getenv("APPDATA"), "vry/stats.json"), "w") as f:
         json.dump(updated_data, f)
 
 
 def read_data():
     try:
-        with open(os.path.join(os.getenv('APPDATA'), "vry/stats.json")) as f:
+        with open(os.path.join(os.getenv("APPDATA"), "vry/stats.json")) as f:
             return json.load(f)
     except (FileNotFoundError, json.decoder.JSONDecodeError):
         return {}

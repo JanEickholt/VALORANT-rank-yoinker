@@ -18,11 +18,7 @@ class Rpc:
             self.discord_running = False
         self.gamemodes = gamemodes
         self.map_dict = map_dict
-        self.data = {
-            "agent": None,
-            "rank": None,
-            "rank_name": None
-        }
+        self.data = {"agent": None, "rank": None, "rank_name": None}
         self.last_presence_data = {}
         self.colors = colors
         self.start_time = time.time()
@@ -41,13 +37,15 @@ class Rpc:
                             agent_img = None
                             agent = None
                         else:
-                            agent = self.colors.agent_dict.get(self.data.get("agent").lower())
+                            agent = self.colors.agent_dict.get(
+                                self.data.get("agent").lower()
+                            )
                             agent_img = agent.lower().replace("/", "")
 
                         if presence["provisioningFlow"] == "CustomGame":
                             gamemode = "Custom Game"
                         else:
-                            gamemode = self.gamemodes.get(presence['queueId'])
+                            gamemode = self.gamemodes.get(presence["queueId"])
 
                         details = f"{gamemode} // {presence['partyOwnerMatchScoreAllyTeam']} - {presence['partyOwnerMatchScoreEnemyTeam']}"
 
@@ -63,7 +61,10 @@ class Rpc:
                             map_text = None
                             map_image = None
 
-                        if self.last_presence_data.get("sessionLoopState") != presence["sessionLoopState"]:
+                        if (
+                            self.last_presence_data.get("sessionLoopState")
+                            != presence["sessionLoopState"]
+                        ):
                             self.start_time = time.time()
 
                         self.rpc.update(
@@ -74,8 +75,12 @@ class Rpc:
                             small_image=agent_img,
                             small_text=agent,
                             start=self.start_time,
-                            buttons=[{"label": "What's this? 👀",
-                                      "url": "https://zaykenyon.github.io/VALORANT-rank-yoinker/"}]
+                            buttons=[
+                                {
+                                    "label": "What's this? 👀",
+                                    "url": "https://zaykenyon.github.io/VALORANT-rank-yoinker/",
+                                }
+                            ],
                         )
                         self.log("RPC in-game data update")
                     elif presence["sessionLoopState"] == "MENUS":
@@ -94,7 +99,7 @@ class Rpc:
                         if presence["partyState"] == "CUSTOM_GAME_SETUP":
                             gamemode = "Custom Game"
                         else:
-                            gamemode = self.gamemodes.get(presence['queueId'])
+                            gamemode = self.gamemodes.get(presence["queueId"])
 
                         self.rpc.update(
                             state=f"{party_string} ({presence['partySize']} of {presence['maxPartySize']})",
@@ -103,16 +108,22 @@ class Rpc:
                             large_text=image_text,
                             small_image=str(self.data.get("rank")),
                             small_text=self.data.get("rank_name"),
-                            buttons=[{"label": "What's this? 👀",
-                                      "url": "https://zaykenyon.github.io/VALORANT-rank-yoinker/"}]
+                            buttons=[
+                                {
+                                    "label": "What's this? 👀",
+                                    "url": "https://zaykenyon.github.io/VALORANT-rank-yoinker/",
+                                }
+                            ],
                         )
                         self.log("RPC menu data update")
                     elif presence["sessionLoopState"] == "PREGAME":
-                        if (presence["provisioningFlow"] == "CustomGame" or
-                                presence["partyState"] == "CUSTOM_GAME_SETUP"):
+                        if (
+                            presence["provisioningFlow"] == "CustomGame"
+                            or presence["partyState"] == "CUSTOM_GAME_SETUP"
+                        ):
                             gamemode = "Custom Game"
                         else:
-                            gamemode = self.gamemodes.get(presence['queueId'])
+                            gamemode = self.gamemodes.get(presence["queueId"])
 
                         map_text = self.map_dict.get(presence["matchMap"].lower())
                         map_image = f"splash_{self.map_dict.get(presence['matchMap'].lower())}_square".lower()
@@ -127,8 +138,12 @@ class Rpc:
                             large_text=map_text,
                             small_image=str(self.data.get("rank")),
                             small_text=self.data.get("rank_name"),
-                            buttons=[{"label": "What's this? 👀",
-                                      "url": "https://zaykenyon.github.io/VALORANT-rank-yoinker/"}]
+                            buttons=[
+                                {
+                                    "label": "What's this? 👀",
+                                    "url": "https://zaykenyon.github.io/VALORANT-rank-yoinker/",
+                                }
+                            ],
                         )
                         self.log("RPC agent-select data update")
             except InvalidID:

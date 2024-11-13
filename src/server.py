@@ -4,7 +4,7 @@ from websocket_server import WebsocketServer
 
 from src.constants import VERSION
 
-logging.getLogger('websocket_server.websocket_server').disabled = True
+logging.getLogger("websocket_server.websocket_server").disabled = True
 
 
 class Server:
@@ -26,9 +26,7 @@ class Server:
             self.log(e)
 
     def handle_new_client(self):
-        self.send_payload("version", {
-            "core": VERSION
-        })
+        self.send_payload("version", {"core": VERSION})
         for key in self.lastMessages:
             if key not in ["chat", "version"]:
                 self.send_message(self.lastMessages[key])

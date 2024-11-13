@@ -23,19 +23,24 @@ class Presences:
         }
 
     def get_presence(self):
-        presences = self.api.fetch(url_type="local", endpoint="/chat/v4/presences", method="get")
-        return presences['presences']
+        presences = self.api.fetch(
+            url_type="local", endpoint="/chat/v4/presences", method="get"
+        )
+        return presences["presences"]
 
     def get_game_state(self, presences):
         return self.get_private_presence(presences)["sessionLoopState"]
 
     def get_private_presence(self, presences):
         for presence in presences:
-            if presence['puuid'] == self.api.puuid:
-                if presence.get("championId") or presence.get("product") == "league_of_legends":
+            if presence["puuid"] == self.api.puuid:
+                if (
+                    presence.get("championId")
+                    or presence.get("product") == "league_of_legends"
+                ):
                     return None
                 else:
-                    return json.loads(base64.b64decode(presence['private']))
+                    return json.loads(base64.b64decode(presence["private"]))
 
     def wait_for_presence(self, players_uuids):
         while True:

@@ -25,13 +25,15 @@ class Content:
         val_map_dict = {}
         val_map_dict.update({None: None})
         for val_map in val_maps["data"]:
-            val_map_dict.update({val_map['displayName']: val_map['splash']})
+            val_map_dict.update({val_map["displayName"]: val_map["splash"]})
         return val_map_dict
 
     def get_content(self):
-        self.content = self.api.fetch("custom",
-                                      f"https://shared.{self.api.region}.a.pvp.net/content-service/v3/content",
-                                      "get")
+        self.content = self.api.fetch(
+            "custom",
+            f"https://shared.{self.api.region}.a.pvp.net/content-service/v3/content",
+            "get",
+        )
         return self.content
 
     def get_latest_season_id(self, content):
@@ -53,12 +55,14 @@ class Content:
         return None
 
     def get_all_agents(self):
-        r_agents = requests.get("https://valorant-api.com/v1/agents?isPlayableCharacter=true").json()
+        r_agents = requests.get(
+            "https://valorant-api.com/v1/agents?isPlayableCharacter=true"
+        ).json()
         agent_dict = {}
         agent_dict.update({None: None})
         agent_dict.update({"": ""})
         for agent in r_agents["data"]:
-            agent_dict.update({agent['uuid'].lower(): agent['displayName']})
+            agent_dict.update({agent["uuid"].lower(): agent["displayName"]})
         self.log(f"retrieved agent dict: {agent_dict}")
         return agent_dict
 
@@ -66,15 +70,12 @@ class Content:
         map_dict = {}
         map_dict.update({None: None})
         for Vmap in maps["data"]:
-            map_dict.update({Vmap['mapUrl'].lower(): Vmap['displayName']})
+            map_dict.update({Vmap["mapUrl"].lower(): Vmap["displayName"]})
         self.log(f"retrieved map dict: {map_dict}")
         return map_dict
 
     def get_act_episode_from_act_id(self, act_id):
-        final = {
-            "act": None,
-            "episode": None
-        }
+        final = {"act": None, "episode": None}
         act_found = False
         for season in self.content["Seasons"]:
             if season["ID"].lower() == act_id.lower():

@@ -6,25 +6,26 @@ class PlayerStats:
 
     # in future rewrite this code
     def get_stats(self, puuid):
-        if not self.config.get_table_flag("headshot_percent") and not self.config.get_table_flag("kd"):
-            return {
-                "kd": "N/a",
-                "hs": "N/a"
-            }
+        if not self.config.get_table_flag(
+            "headshot_percent"
+        ) and not self.config.get_table_flag("kd"):
+            return {"kd": "N/a", "hs": "N/a"}
 
-        response = self.api.fetch('pd',
-                                  f"/mmr/v1/players/{puuid}/competitiveupdates?startIndex=0&endIndex=1&queue=competitive",
-                                  "get")
+        response = self.api.fetch(
+            "pd",
+            f"/mmr/v1/players/{puuid}/competitiveupdates?startIndex=0&endIndex=1&queue=competitive",
+            "get",
+        )
         try:
-            r = self.api.fetch('pd', f"/match-details/v1/matches/{response.json()['Matches'][0]['MatchID']}",
-                               "get")
+            r = self.api.fetch(
+                "pd",
+                f"/match-details/v1/matches/{response.json()['Matches'][0]['MatchID']}",
+                "get",
+            )
 
             # too old match
             if r.status_code == 404:
-                return {
-                    "kd": "N/a",
-                    "hs": "N/a"
-                }
+                return {"kd": "N/a", "hs": "N/a"}
 
             total_hits = 0
             total_headshots = 0
@@ -48,10 +49,7 @@ class PlayerStats:
                 kd = 0
             else:
                 kd = round(kills / deaths, 2)
-            final = {
-                "kd": kd,
-                "hs": "N/a"
-            }
+            final = {"kd": kd, "hs": "N/a"}
 
             # no hits
             if total_hits == 0:
@@ -62,7 +60,4 @@ class PlayerStats:
 
         # no matches
         except IndexError:
-            return {
-                "kd": "N/a",
-                "hs": "N/a"
-            }
+            return {"kd": "N/a", "hs": "N/a"}

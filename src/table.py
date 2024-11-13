@@ -16,7 +16,7 @@ TABLE_COLUMN_NAMES = Literal[
     "HS",
     "WR",
     "KD",
-    "Level"
+    "Level",
 ]
 
 
@@ -34,12 +34,8 @@ class Table:
             bool(config.table.get("peak_rank", True)),  # Peak Rank
             bool(config.table.get("previous_rank", False)),  # Previous Rank
             bool(config.table.get("leaderboard", True)),  # Leaderboard Position
-            bool(
-                config.table.get("headshot_percent", True)
-            ),  # hs
-            bool(
-                config.table.get("winrate", True)
-            ),  # wr
+            bool(config.table.get("headshot_percent", True)),  # hs
+            bool(config.table.get("winrate", True)),  # wr
             bool(config.table.get("kd", True)),  # KD
             bool(config.table.get("level", True)),  # Level
         ]
@@ -56,7 +52,9 @@ class Table:
             f1 & f2 for f1, f2 in zip(self.col_flags, self.runtime_col_flags)
         ]
         self.fields_to_display = [
-            c for c, flag in zip(self.field_names_candidates, self.overall_col_flags) if flag
+            c
+            for c, flag in zip(self.field_names_candidates, self.overall_col_flags)
+            if flag
         ]
 
         self.rows = []
@@ -77,11 +75,17 @@ class Table:
         self.rows.append(zip(self.field_names_candidates, args))
 
     def add_empty_row(self):
-        self.rows.append(zip(self.field_names_candidates, "" * len(self.field_names_candidates)))
+        self.rows.append(
+            zip(self.field_names_candidates, "" * len(self.field_names_candidates))
+        )
 
     def apply_rows(self):
         for row in self.rows:
-            row = [self.ansi_to_console(str(v)) for i, v in row if i in self.fields_to_display]
+            row = [
+                self.ansi_to_console(str(v))
+                for i, v in row
+                if i in self.fields_to_display
+            ]
             self.rich_table.add_row(*row)
 
     def reset_runtime_col_flags(self):
@@ -115,7 +119,9 @@ class Table:
             splits = string.split("m", 1)
             rgb = [int(i) for i in splits[0].split(";")]
             original_strings = splits[1].split("\x1b[0m")
-            string_to_return += f"[rgb({rgb[0]},{rgb[1]},{rgb[2]})]{'[/]'.join(original_strings)}"
+            string_to_return += (
+                f"[rgb({rgb[0]},{rgb[1]},{rgb[2]})]{'[/]'.join(original_strings)}"
+            )
         return string_to_return
 
     def set_columns(self):
@@ -123,7 +129,9 @@ class Table:
             f1 & f2 for f1, f2 in zip(self.col_flags, self.runtime_col_flags)
         ]
         self.fields_to_display = [
-            c for c, flag in zip(self.field_names_candidates, self.overall_col_flags) if flag
+            c
+            for c, flag in zip(self.field_names_candidates, self.overall_col_flags)
+            if flag
         ]
 
         for field in self.fields_to_display:

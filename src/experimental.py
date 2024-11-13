@@ -7,7 +7,8 @@ class Experimental:
 
     def get_views(self, name: str):
         response_views = requests.get(
-            f"https://tracker.gg/valorant/profile/riot/{name.split('#')[0]}%23{name.split('#')[1]}/overview").text
+            f"https://tracker.gg/valorant/profile/riot/{name.split('#')[0]}%23{name.split('#')[1]}/overview"
+        ).text
         try:
             result = response_views.split("views")[1].split(">")[-1]
             int(result)

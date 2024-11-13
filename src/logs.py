@@ -9,7 +9,7 @@ class Logging:
     def __init__(self):
         self.log_file_opened = False
 
-    # `log_string` is a string that is the log message that will be written to the log file. 
+    # `log_string` is a string that is the log message that will be written to the log file.
     def log(self, log_string: str):
         logs_directory = os.getcwd() + "/logs"
 
@@ -31,5 +31,9 @@ class Logging:
         with open(log_file_name, "a" if self.log_file_opened else "w") as log_file:
             self.log_file_opened = True
 
-            current_time = time.strftime("%Y.%m.%d-%H.%M.%S", time.localtime(time.time()))
-            log_file.write(f"[{current_time}] {log_string.encode('ascii', 'replace').decode()}\n")
+            current_time = time.strftime(
+                "%Y.%m.%d-%H.%M.%S", time.localtime(time.time())
+            )
+            log_file.write(
+                f"[{current_time}] {log_string.encode('ascii', 'replace').decode()}\n"
+            )

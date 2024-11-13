@@ -10,7 +10,9 @@ class Colors:
         self.tier_dict = TIER_DICT
         self.agent_color_list = agent_color_list
 
-    def get_color_from_team(self, team, name, player_puuid, self_puuid, agent=None, party_members=None):
+    def get_color_from_team(
+        self, team, name, player_puuid, self_puuid, agent=None, party_members=None
+    ):
         orig_name = name
         if agent is not None:
             if self.hide_names:
@@ -18,18 +20,18 @@ class Colors:
                     name = self.agent_dict[agent.lower()]
                 else:
                     name = "Player"
-        if team == 'Red':
+        if team == "Red":
             if player_puuid not in party_members:
                 team_color = color(name, fore=(238, 77, 77))
             else:
                 team_color = color(orig_name, fore=(238, 77, 77))
-        elif team == 'Blue':
+        elif team == "Blue":
             if player_puuid not in party_members:
                 team_color = color(name, fore=(76, 151, 237))
             else:
                 team_color = color(orig_name, fore=(76, 151, 237))
         else:
-            team_color = ''
+            team_color = ""
         if player_puuid == self_puuid:
             team_color = color(orig_name, fore=(221, 224, 41))
         return team_color
@@ -73,7 +75,7 @@ class Colors:
         gradients = {
             (0, 25): (dark_red, yellow),
             (25, 50): (yellow, green),
-            (50, 100): (green, white)
+            (50, 100): (green, white),
         }
         f = []
         for gradient in gradients:
@@ -84,16 +86,30 @@ class Colors:
                     else:
                         first_higher = False
                     if first_higher:
-                        offset = gradients[gradient][0][rgb] - gradients[gradient][1][rgb]
+                        offset = (
+                            gradients[gradient][0][rgb] - gradients[gradient][1][rgb]
+                        )
                     else:
-                        offset = gradients[gradient][1][rgb] - gradients[gradient][0][rgb]
+                        offset = (
+                            gradients[gradient][1][rgb] - gradients[gradient][0][rgb]
+                        )
                     if first_higher:
-                        f.append(int(gradients[gradient][0][rgb] - offset * number / gradient[1]))
+                        f.append(
+                            int(
+                                gradients[gradient][0][rgb]
+                                - offset * number / gradient[1]
+                            )
+                        )
                     else:
-                        f.append(int(offset * number / gradient[1] + gradients[gradient][0][rgb]))
+                        f.append(
+                            int(
+                                offset * number / gradient[1]
+                                + gradients[gradient][0][rgb]
+                            )
+                        )
                 return color(number, fore=f)
 
     @staticmethod
     def escape_ansi(line):
-        ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
-        return ansi_escape.sub('', line)
+        ansi_escape = re.compile(r"(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]")
+        return ansi_escape.sub("", line)

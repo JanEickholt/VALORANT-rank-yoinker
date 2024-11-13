@@ -17,15 +17,26 @@ from src.constants import VERSION
 
 build_exe_options = {
     "path": sys.path,
-    "include_files":['configurator.bat', 'updatescript.bat'],
-    "packages": ["requests", "colr", "InquirerPy", "websockets", "pypresence", "nest_asyncio", "rich", "websocket_server"],
-    "excludes": ["tkinter", "test", "unittest", "pygments", "xmlrpc"]
+    "include_files": ["configurator.bat", "updatescript.bat"],
+    "packages": [
+        "requests",
+        "colr",
+        "InquirerPy",
+        "websockets",
+        "pypresence",
+        "nest_asyncio",
+        "rich",
+        "websocket_server",
+    ],
+    "excludes": ["tkinter", "test", "unittest", "pygments", "xmlrpc"],
 }
 
 setup(
-    name = "VALORANT rank yoinker",
-    version = VERSION,
-    description='vRY - VALORANT rank yoinker',
-    executables = [Executable("main.py", icon="./assets/Logo.ico", target_name="vry.exe")],
-    options={"build_exe": build_exe_options}
+    name="VALORANT rank yoinker",
+    version=VERSION,
+    description="vRY - VALORANT rank yoinker",
+    executables=[
+        Executable("main.py", icon="./assets/Logo.ico", target_name="vry.exe")
+    ],
+    options={"build_exe": build_exe_options},
 )

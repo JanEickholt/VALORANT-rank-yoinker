@@ -45,7 +45,7 @@ SOCKETS = {
     "skin_level": "e7c63390-eda7-46e0-bb7a-a6abdacd2433",
     "skin_chroma": "3ad1b2b2-acdb-4524-852f-954a76ddae0a",
     "skin_buddy": "77258665-71d1-4623-bc72-44db9bd5b3b3",
-    "skin_buddy_level": "dd3bf334-87f3-40bd-b043-682a57a8dc3a"
+    "skin_buddy_level": "dd3bf334-87f3-40bd-b043-682a57a8dc3a",
 }
 
 AGENT_COLOR_LIST = {
@@ -72,7 +72,9 @@ AGENT_COLOR_LIST = {
     "yoru": (52, 76, 207),
 }
 
-GAMEPODS = requests.get("https://valorant-api.com/internal/locres/en-US").json()["data"]["UI_GamePodStrings"]
+GAMEPODS = requests.get("https://valorant-api.com/internal/locres/en-US").json()[
+    "data"
+]["UI_GamePodStrings"]
 
 PARTY_ICON_SYMBOL = "■"
 PARTY_ICON_LIST = [
@@ -83,38 +85,38 @@ PARTY_ICON_LIST = [
     color(PARTY_ICON_SYMBOL, fore=(94, 227, 67)),
     color(PARTY_ICON_SYMBOL, fore=(226, 237, 57)),
     color(PARTY_ICON_SYMBOL, fore=(212, 82, 207)),
-    PARTY_ICON_SYMBOL
+    PARTY_ICON_SYMBOL,
 ]
 
 NUMBER_TO_RANKS = [
-    color('Unranked', fore=(46, 46, 46)),
-    color('Unranked', fore=(46, 46, 46)),
-    color('Unranked', fore=(46, 46, 46)),
-    color('Iron 1', fore=(72, 69, 62)),
-    color('Iron 2', fore=(72, 69, 62)),
-    color('Iron 3', fore=(72, 69, 62)),
-    color('Bronze 1', fore=(187, 143, 90)),
-    color('Bronze 2', fore=(187, 143, 90)),
-    color('Bronze 3', fore=(187, 143, 90)),
-    color('Silver 1', fore=(174, 178, 178)),
-    color('Silver 2', fore=(174, 178, 178)),
-    color('Silver 3', fore=(174, 178, 178)),
-    color('Gold 1', fore=(197, 186, 63)),
-    color('Gold 2', fore=(197, 186, 63)),
-    color('Gold 3', fore=(197, 186, 63)),
-    color('Platinum 1', fore=(24, 167, 185)),
-    color('Platinum 2', fore=(24, 167, 185)),
-    color('Platinum 3', fore=(24, 167, 185)),
-    color('Diamond 1', fore=(216, 100, 199)),
-    color('Diamond 2', fore=(216, 100, 199)),
-    color('Diamond 3', fore=(216, 100, 199)),
-    color('Ascendant 1', fore=(24, 148, 82)),
-    color('Ascendant 2', fore=(24, 148, 82)),
-    color('Ascendant 3', fore=(24, 148, 82)),
-    color('Immortal 1', fore=(221, 68, 68)),
-    color('Immortal 2', fore=(221, 68, 68)),
-    color('Immortal 3', fore=(221, 68, 68)),
-    color('Radiant', fore=(255, 253, 205)),
+    color("Unranked", fore=(46, 46, 46)),
+    color("Unranked", fore=(46, 46, 46)),
+    color("Unranked", fore=(46, 46, 46)),
+    color("Iron 1", fore=(72, 69, 62)),
+    color("Iron 2", fore=(72, 69, 62)),
+    color("Iron 3", fore=(72, 69, 62)),
+    color("Bronze 1", fore=(187, 143, 90)),
+    color("Bronze 2", fore=(187, 143, 90)),
+    color("Bronze 3", fore=(187, 143, 90)),
+    color("Silver 1", fore=(174, 178, 178)),
+    color("Silver 2", fore=(174, 178, 178)),
+    color("Silver 3", fore=(174, 178, 178)),
+    color("Gold 1", fore=(197, 186, 63)),
+    color("Gold 2", fore=(197, 186, 63)),
+    color("Gold 3", fore=(197, 186, 63)),
+    color("Platinum 1", fore=(24, 167, 185)),
+    color("Platinum 2", fore=(24, 167, 185)),
+    color("Platinum 3", fore=(24, 167, 185)),
+    color("Diamond 1", fore=(216, 100, 199)),
+    color("Diamond 2", fore=(216, 100, 199)),
+    color("Diamond 3", fore=(216, 100, 199)),
+    color("Ascendant 1", fore=(24, 148, 82)),
+    color("Ascendant 2", fore=(24, 148, 82)),
+    color("Ascendant 3", fore=(24, 148, 82)),
+    color("Immortal 1", fore=(221, 68, 68)),
+    color("Immortal 2", fore=(221, 68, 68)),
+    color("Immortal 3", fore=(221, 68, 68)),
+    color("Radiant", fore=(255, 253, 205)),
 ]
 
 TIER_DICT = {
@@ -123,7 +125,7 @@ TIER_DICT = {
     "60bca009-4182-7998-dee7-b8a2558dc369": (209, 84, 141),
     "12683d76-48d7-84a3-4e09-6985794f0445": (90, 159, 226),
     "411e4a55-4e59-7757-41f0-86a53f101bb5": (239, 235, 101),
-    None: None
+    None: None,
 }
 
 WEAPONS = [
@@ -162,7 +164,7 @@ DEFAULT_CONFIG = {
         "headshot_percent": True,
         "winrate": True,
         "kd": False,
-        "level": True
+        "level": True,
     },
     "flags": {
         "last_played": True,
@@ -171,6 +173,6 @@ DEFAULT_CONFIG = {
         "game_chat": True,
         "peak_rank_act": True,
         "discord_rpc": True,
-        "aggregate_rank_rr": True
-    }
+        "aggregate_rank_rr": True,
+    },
 }
