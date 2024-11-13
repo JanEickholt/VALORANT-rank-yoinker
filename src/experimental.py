@@ -2,14 +2,14 @@ import requests
 
 
 class Experimental:
-    def __init__(self, Requests, log):
+    def __init__(self, log):
         self.log = log
 
     def get_views(self, name: str):
-        responseViews = requests.get(
+        response_views = requests.get(
             f"https://tracker.gg/valorant/profile/riot/{name.split('#')[0]}%23{name.split('#')[1]}/overview").text
         try:
-            result = responseViews.split("views")[1].split(">")[-1]
+            result = response_views.split("views")[1].split(">")[-1]
             int(result)
             self.log(f"retrieved views {result}, {name}")
             return int(result)

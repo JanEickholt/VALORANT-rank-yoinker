@@ -4,8 +4,6 @@ import os
 from InquirerPy import inquirer, prompt
 from InquirerPy.separator import Separator
 
-from src.constants import DEFAULT_CONFIG
-
 from src.questions import *
 
 
@@ -13,12 +11,12 @@ def configure():
     default_config = DEFAULT_CONFIG
 
     try:
-        with open("config.json", "r") as openfile:
+        with open("config.json") as openfile:
             user_config = default_config | json.load(openfile)
     except FileNotFoundError:
         print("Generating default configuration")
         user_config = default_config
-    except json.JSONDecodeError: 
+    except json.JSONDecodeError:
         print("config file maybe broken, using default instead")
         user_config = default_config
 
@@ -55,7 +53,7 @@ def configure():
         elif choice is menu_choices[5]:
             changed_config |= prompt(advance_questions(config=loop_config))
         elif choice is menu_choices[7]:
-            proceed=True
+            proceed = True
             break
         else:
             proceed = (not len(changed_config.keys()) > 0) or inquirer.confirm(

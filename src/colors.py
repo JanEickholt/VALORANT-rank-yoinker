@@ -1,15 +1,16 @@
 from colr import color
-from src.constants import tierDict
+from src.constants import TIER_DICT
 import re
 
+
 class Colors:
-    def __init__(self, hide_names, agent_dict, AGENTCOLORLIST):
+    def __init__(self, hide_names, agent_dict, agent_color_list):
         self.hide_names = hide_names
         self.agent_dict = agent_dict
-        self.tier_dict = tierDict
-        self.AGENTCOLORLIST = AGENTCOLORLIST
+        self.tier_dict = TIER_DICT
+        self.agent_color_list = agent_color_list
 
-    def get_color_from_team(self, team, name, playerPuuid, selfPuuid, agent=None, party_members=None):
+    def get_color_from_team(self, team, name, player_puuid, self_puuid, agent=None, party_members=None):
         orig_name = name
         if agent is not None:
             if self.hide_names:
@@ -18,28 +19,28 @@ class Colors:
                 else:
                     name = "Player"
         if team == 'Red':
-            if playerPuuid not in party_members:
-                Teamcolor = color(name, fore=(238, 77, 77))
+            if player_puuid not in party_members:
+                team_color = color(name, fore=(238, 77, 77))
             else:
-                Teamcolor = color(orig_name, fore=(238, 77, 77))
+                team_color = color(orig_name, fore=(238, 77, 77))
         elif team == 'Blue':
-            if playerPuuid not in party_members:
-                Teamcolor = color(name, fore=(76, 151, 237))
+            if player_puuid not in party_members:
+                team_color = color(name, fore=(76, 151, 237))
             else:
-                Teamcolor = color(orig_name, fore=(76, 151, 237))
+                team_color = color(orig_name, fore=(76, 151, 237))
         else:
-            Teamcolor = ''
-        if playerPuuid == selfPuuid:
-            Teamcolor = color(orig_name, fore=(221, 224, 41))
-        return Teamcolor
+            team_color = ''
+        if player_puuid == self_puuid:
+            team_color = color(orig_name, fore=(221, 224, 41))
+        return team_color
 
-
-    def get_rgb_color_from_skin(self, skin_id, valoApiSkins):
-        for skin in valoApiSkins.json()["data"]:
+    def get_rgb_color_from_skin(self, skin_id, valo_api_skins):
+        for skin in valo_api_skins.json()["data"]:
             if skin_id == skin["uuid"]:
                 return self.tier_dict[skin["contentTierUuid"]]
 
-    def level_to_color(self, level):
+    @staticmethod
+    def level_to_color(level):
         if level >= 400:
             return color(level, fore=(102, 212, 212))
         elif level >= 300:
@@ -51,19 +52,20 @@ class Colors:
         elif level < 100:
             return color(level, fore=(211, 211, 211))
 
-    def get_agent_from_uuid(self, agentUUID):
-        agent = str(self.agent_dict.get(agentUUID))
-        if self.AGENTCOLORLIST.get(agent.lower()) != None:
-            agent_color = self.AGENTCOLORLIST.get(agent.lower())
+    def get_agent_from_uuid(self, agent_uuid):
+        agent = str(self.agent_dict.get(agent_uuid))
+        if self.agent_color_list.get(agent.lower()):
+            agent_color = self.agent_color_list.get(agent.lower())
             return color(agent, fore=agent_color)
         else:
             return agent
 
-    def get_hs_gradient(self, number):
+    @staticmethod
+    def get_gradient(number):
         try:
             number = int(number)
         except ValueError:
-            return color("N/a",fore=(46, 46, 46))
+            return color("N/a", fore=(46, 46, 46))
         dark_red = (64, 15, 10)
         yellow = (140, 119, 11)
         green = (18, 204, 25)
@@ -78,51 +80,20 @@ class Colors:
             if gradient[0] <= number <= gradient[1]:
                 for rgb in range(3):
                     if gradients[gradient][0][rgb] > gradients[gradient][1][rgb]:
-                        firstHigher = True
+                        first_higher = True
                     else:
-                        firstHigher = False
-                    if firstHigher:
+                        first_higher = False
+                    if first_higher:
                         offset = gradients[gradient][0][rgb] - gradients[gradient][1][rgb]
                     else:
                         offset = gradients[gradient][1][rgb] - gradients[gradient][0][rgb]
-                    if firstHigher:
+                    if first_higher:
                         f.append(int(gradients[gradient][0][rgb] - offset * number / gradient[1]))
                     else:
                         f.append(int(offset * number / gradient[1] + gradients[gradient][0][rgb]))
                 return color(number, fore=f)
 
-    def get_wr_gradient(self, number):
-        try:
-            number = int(number)
-        except ValueError:
-            return color("N/a",fore=(46, 46, 46))
-        dark_red = (64, 15, 10)
-        yellow = (140, 119, 11)
-        green = (18, 204, 25)
-        white = (255, 255, 255)
-        gradients = {
-            (0, 45): (dark_red, yellow),
-            (45, 55): (yellow, green),
-            (55, 100): (green, white)
-        }
-        f = []
-        for gradient in gradients:
-            if gradient[0] <= number <= gradient[1]:
-                for rgb in range(3):
-                    if gradients[gradient][0][rgb] > gradients[gradient][1][rgb]:
-                        firstHigher = True
-                    else:
-                        firstHigher = False
-                    if firstHigher:
-                        offset = gradients[gradient][0][rgb] - gradients[gradient][1][rgb]
-                    else:
-                        offset = gradients[gradient][1][rgb] - gradients[gradient][0][rgb]
-                    if firstHigher:
-                        f.append(int(gradients[gradient][0][rgb] - offset * number / gradient[1]))
-                    else:
-                        f.append(int(offset * number / gradient[1] + gradients[gradient][0][rgb]))
-                return color(number, fore=f)
-
-    def escape_ansi(self, line):
+    @staticmethod
+    def escape_ansi(line):
         ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0-?]*[ -/]*[@-~]')
         return ansi_escape.sub('', line)

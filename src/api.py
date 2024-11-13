@@ -12,13 +12,13 @@ import io
 import subprocess
 from requests.exceptions import ConnectionError
 
-class Requests:
-    def __init__(self, version, log, Error):
-        self.Error = Error
+
+class Api:
+    def __init__(self, version, log, error):
+        self.error = error
         self.version = version
         self.headers = {}
         self.log = log
-
 
         self.lockfile = self.get_lockfile()
         self.region = self.get_region()
@@ -26,24 +26,26 @@ class Requests:
         self.glz_url = f"https://glz-{self.region[1][0]}.{self.region[1][1]}.a.pvp.net"
         self.log(f"Api urls: pd_url: '{self.pd_url}', glz_url: '{self.glz_url}'")
         self.region = self.region[0]
-        
+
         self.puuid = ''
-        #fetch puuid so its avaible outside
+        # fetch puuid so its available outside
         if not self.get_headers(init=True):
             self.log("Invalid URI format, invalid lockfile, going back to menu")
-            self.get_lockfile(ignoreLockfile=True)
-        
+            self.get_lockfile(ignore_lockfile=True)
 
     @staticmethod
     def check_version(version, copy_run_update_script):
         # checking for latest release
         r = requests.get("https://api.github.com/repos/zayKenyon/VALORANT-rank-yoinker/releases")
         json_data = r.json()
-        release_version = json_data[0]["tag_name"]  # get release version
+
+        # get release version
+        release_version = json_data[0]["tag_name"]
         for asset in json_data[0]["assets"]:
             if "zip" in asset["content_type"]:
-                    link = asset["browser_download_url"]  # link for the latest release
-                    break
+                # link for the latest release
+                link = asset["browser_download_url"]
+                break
         if float(release_version) > float(version):
             print(f"New version available! {link}")
             if sys.argv[0][-3:] == "exe":
@@ -67,23 +69,25 @@ class Requests:
         r_zip = requests.get(link, stream=True)
         z = zipfile.ZipFile(io.BytesIO(r_zip.content))
         z.extractall(os.path.join(os.getenv('APPDATA'), "vry"))
-        subprocess.Popen([os.path.join(os.getenv('APPDATA'), "vry", "updatescript.bat"), os.path.join(os.getenv('APPDATA'), "vry", ".".join(os.path.basename(link).split(".")[:-1])), os.getcwd(), os.path.join(os.getenv('APPDATA'), "vry")])
+        subprocess.Popen([os.path.join(os.getenv('APPDATA'), "vry", "updatescript.bat"),
+                          os.path.join(os.getenv('APPDATA'), "vry", ".".join(os.path.basename(link).split(".")[:-1])),
+                          os.getcwd(), os.path.join(os.getenv('APPDATA'), "vry")])
 
     @staticmethod
     def check_status():
         # checking status
-        rStatus = requests.get(
+        r_status = requests.get(
             "https://raw.githubusercontent.com/zayKenyon/VALORANT-rank-yoinker/main/status.json").json()
-        if not rStatus["status_good"] or rStatus["print_message"]:
-            status_color = (255, 0, 0) if not rStatus["status_good"] else (0, 255, 0)
-            print(color(rStatus["message_to_display"], fore=status_color))
-            
+        if not r_status["status_good"] or r_status["print_message"]:
+            status_color = (255, 0, 0) if not r_status["status_good"] else (0, 255, 0)
+            print(color(r_status["message_to_display"], fore=status_color))
+
     def fetch(self, url_type: str, endpoint: str, method: str, rate_limit_seconds=5):
         try:
             if url_type == "glz":
                 response = requests.request(method, self.glz_url + endpoint, headers=self.get_headers(), verify=False)
                 self.log(f"fetch: url: '{url_type}', endpoint: {endpoint}, method: {method},"
-                    f" response code: {response.status_code}")
+                         f" response code: {response.status_code}")
 
                 if response.status_code == 404:
                     return response.json()
@@ -100,7 +104,7 @@ class Requests:
                         self.log("response not ok glz endpoint: rate limit 429")
                     else:
                         self.log("response not ok glz endpoint: " + response.text)
-                    time.sleep(rate_limit_seconds+5)
+                    time.sleep(rate_limit_seconds + 5)
                     self.headers = {}
                     self.fetch(url_type, endpoint, method)
                 return response.json()
@@ -125,14 +129,14 @@ class Requests:
                         self.log(f"response not ok pd endpoint, rate limit 429")
                     else:
                         self.log(f"response not ok pd endpoint, {response.text}")
-                    time.sleep(rate_limit_seconds+5)
+                    time.sleep(rate_limit_seconds + 5)
                     self.headers = {}
-                    return self.fetch(url_type, endpoint, method, rate_limit_seconds=rate_limit_seconds+5)
+                    return self.fetch(url_type, endpoint, method, rate_limit_seconds=rate_limit_seconds + 5)
                 return response
             elif url_type == "local":
                 local_headers = {'Authorization': 'Basic ' + base64.b64encode(
                     ('riot:' + self.lockfile['password']).encode()).decode()}
-                
+
                 while True:
                     try:
                         response = requests.request(method, f"https://127.0.0.1:{self.lockfile['port']}{endpoint}",
@@ -156,16 +160,18 @@ class Requests:
                 self.log(
                     f"fetch: url: '{url_type}', endpoint: {endpoint}, method: {method},"
                     f" response code: {response.status_code}")
-                if not response.ok: self.headers = {}
+                if not response.ok:
+                    self.headers = {}
                 return response.json()
         except json.decoder.JSONDecodeError:
-            self.log(f"JSONDecodeError in fetch function, resp.code: {response.status_code}, resp_text: '{response.text}")
+            self.log(
+                f"JSONDecodeError in fetch function, resp.code: {response.status_code}, resp_text: '{response.text}")
             print(response)
             print(response.text)
 
     def get_region(self):
         path = os.path.join(os.getenv('LOCALAPPDATA'), R'VALORANT\Saved\Logs\ShooterGame.log')
-        with open(path, "r", encoding="utf8") as file:
+        with open(path, encoding="utf8") as file:
             while True:
                 line = file.readline()
                 if '.a.pvp.net/account-xp/v1/' in line:
@@ -181,7 +187,7 @@ class Requests:
 
     def get_current_version(self):
         path = os.path.join(os.getenv('LOCALAPPDATA'), R'VALORANT\Saved\Logs\ShooterGame.log')
-        with open(path, "r", encoding="utf8") as file:
+        with open(path, encoding="utf8") as file:
             while True:
                 line = file.readline()
                 if 'CI server version:' in line:
@@ -192,17 +198,17 @@ class Requests:
                     self.log(f"got version from logs '{version}'")
                     return version
 
-    def get_lockfile(self, ignoreLockfile=False):
-        #ignoring lockfile is for when lockfile exists but it's not really valid, (local endpoints are not initialized yet)
+    def get_lockfile(self, ignore_lockfile=False):
+        # ignoring lockfile is for when lockfile exists, but it's not really valid,
+        # (local endpoints are not initialized yet)
         path = os.path.join(os.getenv('LOCALAPPDATA'), R'Riot Games\Riot Client\Config\lockfile')
-        
-        if self.Error.LockfileError(path, ignoreLockfile=ignoreLockfile):
+
+        if self.error.lockfile_error(path, ignore_lockfile=ignore_lockfile):
             with open(path) as lockfile:
                 self.log("opened lockfile")
                 data = lockfile.read().split(':')
                 keys = ['name', 'PID', 'port', 'password', 'protocol']
                 return dict(zip(keys, data))
-
 
     def get_headers(self, refresh=False, init=False):
         if self.headers == {} or refresh:

@@ -1,6 +1,5 @@
 from typing import Literal, get_args
 
-# from prettytable import PrettyTable
 from rich.table import Table as RichTable
 from rich.console import Console as RichConsole
 
@@ -22,7 +21,7 @@ TABLE_COLUMN_NAMES = Literal[
 
 
 class Table:
-    def __init__(self, config, chatlog, log):
+    def __init__(self, config, chat_log, log):
         self.log = log
         self.rich_table = RichTable()
         self.col_flags = [
@@ -32,8 +31,8 @@ class Table:
             bool(config.table.get("skin", True)),  # Skin
             True,  # Rank
             bool(config.table.get("rr", True)),  # RR
-            bool(config.table.get("peakrank", True)),  # Peak Rank
-            bool(config.table.get("previousrank", False)), # Previous Rank
+            bool(config.table.get("peak_rank", True)),  # Peak Rank
+            bool(config.table.get("previous_rank", False)),  # Previous Rank
             bool(config.table.get("leaderboard", True)),  # Leaderboard Position
             bool(
                 config.table.get("headshot_percent", True)
@@ -49,11 +48,10 @@ class Table:
         self.field_names = [
             c for c, i in zip(self.field_names_candidates, self.col_flags) if i
         ]
-        self.chatlog = chatlog
+        self.chat_log = chat_log
         self.console = RichConsole(color_system="truecolor")
 
-
-        #only to get init value not used
+        # only to get init value not used
         self.overall_col_flags = [
             f1 & f2 for f1, f2 in zip(self.col_flags, self.runtime_col_flags)
         ]
@@ -61,14 +59,11 @@ class Table:
             c for c, flag in zip(self.field_names_candidates, self.overall_col_flags) if flag
         ]
 
-        # for field in fields_to_display:
-        #     self.rich_table.add_column(field, justify="center")
-        # self.set_collumns()
         self.rows = []
 
     def set_title(self, title):
         self.rich_table.title = self.ansi_to_console(title)
-    
+
     def set_caption(self, caption):
         self.rich_table.caption = self.ansi_to_console(caption)
 
@@ -79,16 +74,10 @@ class Table:
         self.rich_table.field_names = field_names
 
     def add_row_table(self, args: list):
-        # row = [c for c, i in zip(args, self.col_flags) if i]
-        # row = [self.ansi_to_console(str(i)) for i in row]
         self.rows.append(zip(self.field_names_candidates, args))
-        
-        # self.rich_table.add_row(*row)
 
     def add_empty_row(self):
-        # empty_row = [""] * sum(self.col_flags)
-        # self.rich_table.add_row(*empty_row)
-        self.rows.append(zip(self.field_names_candidates, ""*len(self.field_names_candidates)))
+        self.rows.append(zip(self.field_names_candidates, "" * len(self.field_names_candidates)))
 
     def apply_rows(self):
         for row in self.rows:
@@ -115,8 +104,6 @@ class Table:
         self.rich_table.title_style = "bold"
         self.rich_table.caption_style = "italic rgb(50,505,50)"
         self.rich_table.caption_justify = "left"
-        
-        pass
 
     def ansi_to_console(self, line):
         if "\x1b[38;2;" not in line:
