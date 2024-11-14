@@ -21,6 +21,12 @@ GAMEMODES = {
     "": "Custom",
 }
 
+GAME_STATE_DICT = {
+    "INGAME": color("In-Game", fore=(241, 39, 39)),
+    "PREGAME": color("Agent Select", fore=(103, 237, 76)),
+    "MENUS": color("In-Menus", fore=(238, 241, 54)),
+}
+
 BEFORE_ASCENDANT_SEASONS = [
     "0df5adb9-4dcb-6899-1306-3e9860661dd3",
     "3f61c772-4560-cd3f-5d3f-a7ab5abda6b3",
@@ -127,6 +133,8 @@ TIER_DICT = {
     "411e4a55-4e59-7757-41f0-86a53f101bb5": (239, 235, 101),
     None: None,
 }
+
+VALO_API_SKINS = requests.get("https://valorant-api.com/v1/weapons/skins")
 
 WEAPONS = [
     "Classic",
