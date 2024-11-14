@@ -10,16 +10,15 @@ class Presences:
 
     @staticmethod
     def decode_presence(private):
-        # try:
         if private and "{" not in str(private):
             presence_dict = json.loads(base64.b64decode(str(private)).decode())
             if presence_dict.get("isValid"):
                 return presence_dict
         return {
-            "is_valid": False,
-            "party_id": 0,
-            "party_size": 0,
-            "party_version": 0,
+            "isValid": False,
+            "partyId": 0,
+            "partySize": 0,
+            "partyVersion": 0,
         }
 
     def get_presence(self):

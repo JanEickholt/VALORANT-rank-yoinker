@@ -248,10 +248,10 @@ try:
                             rpc.set_data({"agent": player["CharacterID"]})
                     players_data.update(
                         {
-                            player["subject"]: {
+                            player["Subject"]: {
                                 "team": player["TeamID"],
                                 "agent": player["CharacterID"],
-                                "streamer_mode": player["player_identity"]["Incognito"],
+                                "streamer_mode": player["PlayerIdentity"]["Incognito"],
                             }
                         }
                     )
@@ -739,7 +739,7 @@ try:
                             "rr": rr,
                             "kd": player_stats["kd"],
                             "headshotPercentage": player_stats["hs"],
-                            "winPercentage": f"{player_rank['wr']} ({player_rank['numberofgames']})",
+                            "winPercentage": f"{player_rank['wr']} ({player_rank['number_of_games']})",
                         }
 
             if game_state == "MENUS":
@@ -857,13 +857,13 @@ try:
                             heartbeat_data["players"][player["Subject"]] = {
                                 "name": names[player["Subject"]],
                                 "rank": player_rank["rank"],
-                                "peakRank": player_rank["peakrank"],
+                                "peakRank": player_rank["peak_rank"],
                                 "peakRankAct": peak_rank_act,
                                 "level": player_level,
                                 "rr": rr,
                                 "kd": player_stats["kd"],
                                 "headshotPercentage": player_stats["hs"],
-                                "winPercentage": f"{player_rank['wr']} ({player_rank['numberofgames']})",
+                                "winPercentage": f"{player_rank['wr']} ({player_rank['number_of_games']})",
                             }
 
                     seen.append(player["Subject"])
