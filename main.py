@@ -157,50 +157,44 @@ def main(logging, chat_logging, server):
 
         richConsole = RichConsole()
 
-        first_time = True
+        game_state = False
+        while not game_state:
+            presence = presences.get_presence()
+            # wait until your own valorant presence is initialized
+            if not presences.get_private_presence(presence):
+                time.sleep(5)
+                continue
+            if cfg.get_feature_flag("discord_rpc"):
+                rpc.set_rpc(presences.get_private_presence(presence))
+                game_state = presences.get_game_state(presence)
+                time.sleep(2)
+        log(f"first game state: {game_state}")
+
         first_print = True
         while True:
             table.clear()
             table.set_default_field_names()
             table.reset_runtime_col_flags()
 
+            if (not first_print) and cfg.get_feature_flag("pre_cls"):
+                os.system("cls")
+
             try:
-                if first_time:
-                    run = True
-                    while run:
-                        while True:
-                            presence = presences.get_presence()
-                            # wait until your own valorant presence is initialized
-                            if presences.get_private_presence(presence):
-                                break
-                            time.sleep(5)
-                        if cfg.get_feature_flag("discord_rpc"):
-                            rpc.set_rpc(presences.get_private_presence(presence))
-                        game_state = presences.get_game_state(presence)
-                        if game_state:
-                            run = False
-                        time.sleep(2)
-                    log(f"first game state: {game_state}")
-                else:
-                    loop = asyncio.new_event_loop()
-                    asyncio.set_event_loop(loop)
-                    previous_game_state = game_state
-                    game_state = loop.run_until_complete(
-                        wss.recconect_to_websocket(game_state)
-                    )
-                    # we invalidate the cached responses when going from any state to menus
-                    if previous_game_state != game_state and game_state == "MENUS":
-                        rank.invalidate_cached_responses()
-                    log(f"new game state: {game_state}")
-                    loop.close()
-                first_time = False
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                previous_game_state = game_state
+                game_state = loop.run_until_complete(
+                    wss.recconect_to_websocket(game_state)
+                )
+                # we invalidate the cached responses when going from any state to menus
+                if previous_game_state != game_state and game_state == "MENUS":
+                    rank.invalidate_cached_responses()
+                log(f"new game state: {game_state}")
+                loop.close()
             except TypeError:
                 raise Exception("Game has not started yet!")
 
             log(f"getting new {game_state} scoreboard")
-
-            if (not first_print) and cfg.get_feature_flag("pre_cls"):
-                os.system("cls")
 
             is_leaderboard_needed = False
 
